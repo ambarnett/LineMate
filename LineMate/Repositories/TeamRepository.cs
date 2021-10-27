@@ -48,19 +48,19 @@ namespace LineMate.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT t.Id, t.Name, t.CreatedByUserProfileId FROM Team t WHERE t.Id = @Id";
-                    DbUtils.AddParameter(cmd, "@Id", id);
-
-                    Team team = null;
+                    cmd.CommandText = @"SELECT Id, Name, CreatedByUserProfileId FROM Team WHERE Id = @id";
+                    DbUtils.AddParameter(cmd, "@id", id);
 
                     var reader = cmd.ExecuteReader();
+                    Team team = null;
+
                     if (reader.Read())
                     {
                         team = new Team()
                         {
                             Id = id,
                             Name = DbUtils.GetString(reader, "Name"),
-                            CreatedByUserProfileId = DbUtils.GetInt(reader, "CreatedByUserId"),
+                            CreatedByUserProfileId = DbUtils.GetInt(reader, "CreatedByUserProfileId"),
                         };
 
                     }

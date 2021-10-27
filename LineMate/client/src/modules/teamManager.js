@@ -19,6 +19,23 @@ import { getToken } from "./authManager";
      })
  }
 
+ export const getTeamById = (id) => {
+     return getToken().then(token => {
+         return fetch(`${apiUrl}/${id}`, {
+             method: "GET",
+             headers: {
+                 Authorization: `Bearer ${token}`
+             }
+         }).then(res => {
+             if(res.ok){
+                 return res.json();
+             } else {
+                 throw new Error("ERROR GETTING TEAM BY ID");
+             }
+         })
+     })
+ }
+
  export const addTeam = (team) => {
      return getToken().then((token) => {
          return fetch(apiUrl, {
@@ -36,6 +53,19 @@ import { getToken } from "./authManager";
              } else {
                  throw new Error("An unknown error occurred while trying to save a new team.");
              }
+         })
+     })
+ }
+
+ export const updateTeam = (team) => {
+     return getToken().then(token => {
+         return fetch(`${apiUrl}/${team.id}`, {
+             method: "PUT",
+             headers: {
+                 Authorization: `Bearer ${token}`,
+                 "Content-Type": "application/json",
+             },
+             body: JSON.stringify(team),
          })
      })
  }

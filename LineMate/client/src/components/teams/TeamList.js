@@ -10,30 +10,29 @@ export default function TeamList() {
 
     const getTeamsFromState = () => {
         return getAllTeams()
-        .then(teams => setTeams(teams))
+            .then(teams => setTeams(teams))
     }
-    useEffect(() => {
-        getTeamsFromState()
-    }, [])
 
     const handleDelete = (teamId) => {
-        if(window.confirm(`Are you sure you want to delete this team? Press OK to confirm.`)) {
+        if (window.confirm(`Are you sure you want to delete this team? Press OK to confirm.`)) {
             deleteTeam(teamId)
-            .then(getTeamsFromState())
+                .then(getTeamsFromState())
         } else {
             history.push("/")
         }
     }
 
-    const goToTeamForm = e => {
-        e.preventDefault();
-        history.push("/addTeam");
-    }
+    useEffect(() => {
+        getTeamsFromState()
+    }, [])
 
     return (
         <>
+            <Button outline color="primary" onClick={e => {
+                e.preventDefault()
+                history.push("/team/add")
+            }}>Add Team</Button>
             <section>
-                <Button outline color="primary" onClick={goToTeamForm}>Add Team</Button>
                 {teams.map(t => <Team key={t.id} team={t} handleDelete={handleDelete} />)}
             </section>
         </>

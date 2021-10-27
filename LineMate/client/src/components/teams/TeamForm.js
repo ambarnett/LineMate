@@ -1,27 +1,53 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
-import { addTeam } from "../../modules/teamManager";
+import { addTeam, getTeamById, updateTeam } from "../../modules/teamManager";
 
 export default function TeamForm() {
     const history = useHistory();
-    const [teamName, setTeamName] = useState();
+    const [team, setTeam] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
+    const params = useParams();
+
+    useEffect(() => {
+        if (params.id) {
+            getTeamById(params.id)
+                .then(p => {
+                    setTeam(p)
+                    setIsLoading(false)
+                })
+        }
+    }, [])
+
+    const handleInputChange = e => {
+        const teamCopy = { ...team }
+        teamCopy[e.target.id] = e.target.value
+        setTeam(teamCopy)
+    }
 
     const submitForm = e => {
         e.preventDefault();
-        addTeam({ name: teamName })
-        .then(() => history.push("/team"))
-        .catch((err) => alert(`An error ocurred: ${err.message}`));
+        if (params.id) {
+            setIsLoading(true)
+            updateTeam(team)
+                .then(() => {
+                    history.push("/team")
+                })
+        } else {
+            addTeam(team)
+                .then(() => history.push("/team"))
+                .catch((err) => alert(`An error ocurred: ${err.message}`));
+        }
     };
 
     return (
-        <Form onSubmit={submitForm}>
+        <Form>
             <FormGroup>
                 <Label for="teamName">Team Name</Label>
-                <Input id="teamName" type="text" onChange={e => setTeamName(e.target.value)} />
+                <Input id="name" type="text" name="teamName" placeholder="Team Name" value={team.name} onChange={handleInputChange} />
             </FormGroup>
             <FormGroup>
-                <Button>
+                <Button onClick={submitForm}>
                     Save
                 </Button>
             </FormGroup>
