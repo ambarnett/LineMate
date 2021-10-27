@@ -5,8 +5,9 @@ import Register from "./Register";
 import Home from "./homePage/Home";
 import TeamList from "./teams/TeamList";
 import TeamForm from "./teams/TeamForm";
+import TeamDetail from "./teams/TeamDetail";
 
-export default function ApplicationViews({isLoggedIn }){
+export default function ApplicationViews({ isLoggedIn }) {
     return (
         <main>
             <Switch>
@@ -18,8 +19,16 @@ export default function ApplicationViews({isLoggedIn }){
                     {isLoggedIn ? <TeamList /> : <Redirect to="/login" />}
                 </Route>
 
-                <Route path="/addTeam">
-                    {isLoggedIn ? <TeamForm /> : <Redirect to ="/login" />}
+                <Route path="/team/add" exact>
+                    {isLoggedIn ? <TeamForm /> : <Redirect to="/login" />}
+                </Route>
+
+                <Route path='/team/:id' exact>
+                    {isLoggedIn ? <TeamDetail /> : <Redirect to='/login' />}
+                </Route>
+
+                <Route path="/team/edit/:id" exact>
+                    {isLoggedIn ? <TeamForm /> : <Redirect to='/login' />}
                 </Route>
 
                 <Route path="/login">
