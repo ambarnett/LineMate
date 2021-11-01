@@ -11,7 +11,11 @@ export default function Team({ team, handleDelete }) {
                         {team.name}
                     </Link>
                 </strong>
-                <Button className="btn btn-danger float-end" onClick={() => handleDelete(team.id)}>Delete</Button>
+                <Button
+                    className="btn btn-danger float-end"
+                    onClick={() => handleDelete(team.id)}>
+                    Delete
+                </Button>
             </CardBody>
         </Card>
     )

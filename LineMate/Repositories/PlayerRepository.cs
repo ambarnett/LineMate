@@ -16,7 +16,17 @@ namespace LineMate.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, FirstName, LastName, Position, JerseyNumber, TeamId, Line FROM Players";
+                    cmd.CommandText = @"SELECT 
+                                            p.Id, 
+                                            p.FirstName, 
+                                            p.LastName, 
+                                            p.Position, 
+                                            p.JerseyNumber, 
+                                            p.TeamId, 
+                                            p.Line, 
+                                            t.Name
+                                        FROM Players p 
+                                        LEFT JOIN Team t on p.TeamId = t.Id";
 
                     var reader = cmd.ExecuteReader();
                     var players = new List<Player>();
@@ -31,6 +41,11 @@ namespace LineMate.Repositories
                             JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
                             TeamId = DbUtils.GetInt(reader, "TeamId"),
                             Line = DbUtils.GetInt(reader, "Line"),
+                            Team = new Team()
+                            {
+                                Id = DbUtils.GetInt(reader, "TeamId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                            },
                         });
                     }
                     reader.Close();
@@ -47,7 +62,18 @@ namespace LineMate.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, FirstName, LastName, Position, JerseyNumber, TeamId, Line FROM Players WHERE Id = @id";
+                    cmd.CommandText = @"SELECT 
+                                            p.Id, 
+                                            p.FirstName, 
+                                            p.LastName, 
+                                            p.Position, 
+                                            p.JerseyNumber, 
+                                            p.TeamId, 
+                                            p.Line, 
+                                            t.Name
+                                        FROM Players p 
+                                        LEFT JOIN Team t on p.TeamId = t.Id
+                                        WHERE p.Id = @id";
                     DbUtils.AddParameter(cmd, "@id", id);
 
                     var reader = cmd.ExecuteReader();
@@ -64,6 +90,11 @@ namespace LineMate.Repositories
                             JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
                             TeamId = DbUtils.GetInt(reader, "TeamId"),
                             Line = DbUtils.GetInt(reader, "Line"),
+                            Team = new Team()
+                            {
+                                Id = DbUtils.GetInt(reader, "TeamId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                            }
                         };
                     }
                     reader.Close();

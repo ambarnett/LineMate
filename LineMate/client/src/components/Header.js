@@ -21,7 +21,7 @@ export default function Header({ isLoggedIn }) {
                 <NavbarBrand tag={RRNavLink} to="/">LineMate</NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
-                    <Nav className="mr-auto" navbar>
+                    <Nav className="mr-auto" tabs>
                         {isLoggedIn &&
                             <>
                                 <NavItem>
@@ -29,6 +29,9 @@ export default function Header({ isLoggedIn }) {
                                 </NavItem>
                                 <NavItem>
                                     <NavLink tag={RRNavLink} to="/team">Teams</NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink tag={RRNavLink} to="/player">Players</NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink aria-current="page" className="nav-link"

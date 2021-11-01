@@ -13,5 +13,6 @@ namespace LineMate.Models
         public int JerseyNumber { get; set; }
         public int TeamId { get; set; }
         public int Line { get; set; }
+        public Team Team { get; set; }
     }
 }
