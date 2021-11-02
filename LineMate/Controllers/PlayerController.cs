@@ -6,7 +6,7 @@ using LineMate.Repositories;
 
 namespace LineMate.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PlayerController : ControllerBase

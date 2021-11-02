@@ -7,7 +7,7 @@ using LineMate.Repositories;
 
 namespace LineMate.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
 
@@ -27,7 +27,7 @@ namespace LineMate.Controllers
             return Ok(_teamRepository.GetAllTeams());
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var team = _teamRepository.GetTeamById(id);
