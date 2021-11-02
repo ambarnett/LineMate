@@ -72,6 +72,7 @@ export default function PlayerForm() {
                     value={player.position}
                     onChange={handleInputChange}
                 >
+                    <option>Select Position</option>
                     <option>Left Wing</option>
                     <option>Center</option>
                     <option>Right Wing</option>

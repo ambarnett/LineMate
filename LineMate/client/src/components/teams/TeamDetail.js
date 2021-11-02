@@ -5,11 +5,11 @@ import { getTeamById } from "../../modules/teamManager";
 
 export default function TeamDetail() {
     const [team, setTeam] = useState({});
-    const { id } = useParams();
+    const params = useParams();
     const history = useHistory();
 
     useEffect(() => {
-        getTeamById(id).then(setTeam);
+        getTeamById(params.id).then(setTeam);
     }, []);
 
     return (
@@ -21,7 +21,7 @@ export default function TeamDetail() {
                         <h3>{team.name}</h3>
                         <ListGroupItem>
                             <Card>
-                                Add list of players on the team
+                                {team.player.firstName}
                             </Card>
                         </ListGroupItem>
                     </ListGroup>

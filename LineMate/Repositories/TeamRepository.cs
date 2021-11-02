@@ -3,6 +3,7 @@ using LineMate.Models;
 using LineMate.Utils;
 using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
+using System.Linq;
 
 namespace LineMate.Repositories
 {
@@ -20,9 +21,16 @@ namespace LineMate.Repositories
                     cmd.CommandText = @"SELECT 
                                             t.Id, 
                                             t.Name, 
-                                            t.CreatedByUserProfileId
-                                        FROM 
-                                            Team t";
+                                            t.CreatedByUserProfileId,
+                                                p.FirstName, 
+                                                p.LastName, 
+                                                p.Position,
+                                                p.JerseyNumber,
+                                                p.Line, 
+                                                p.TeamId,
+                                                p.Id AS PlayerId
+                                            FROM Team t 
+                                            JOIN Players p on p.TeamId = t.Id";
                     var reader = cmd.ExecuteReader();
                     var teams = new List<Team>();
                     while (reader.Read())
@@ -32,6 +40,16 @@ namespace LineMate.Repositories
                             Id = (int)DbUtils.GetNullableInt(reader, "Id"),
                             Name = DbUtils.GetString(reader, "Name"),
                             CreatedByUserProfileId = (int)DbUtils.GetNullableInt(reader, "CreatedByUserProfileId"),
+                            Player = new Player()
+                            {
+                                Id = DbUtils.GetInt(reader, "PlayerId"),
+                                FirstName = DbUtils.GetString(reader, "FirstName"),
+                                LastName = DbUtils.GetString(reader, "LastName"),
+                                Position = DbUtils.GetString(reader, "Position"),
+                                JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
+                                TeamId = DbUtils.GetInt(reader, "TeamId"),
+                                Line = DbUtils.GetInt(reader, "Line"),
+                            }
                         });
                     }
                     reader.Close();
@@ -41,31 +59,64 @@ namespace LineMate.Repositories
             }
         }
 
-        public Team GetTeamById(int id)
+        public List<Team> GetTeamById(int id)
         {
             using (var conn = Connection)
             {
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"SELECT Id, Name, CreatedByUserProfileId FROM Team WHERE Id = @id";
+                    cmd.CommandText = @"SELECT 
+                                            t.Id, 
+                                            t.Name, 
+                                            t.CreatedByUserProfileId,
+                                                p.FirstName, 
+                                                p.LastName, 
+                                                p.Position,
+                                                p.JerseyNumber,
+                                                p.TeamId,
+                                                p.Line, 
+                                                p.Id AS PlayerId
+                                            FROM Team t 
+                                            JOIN Players p on t.Id = p.TeamId
+                                            WHERE t.Id = @id";
                     DbUtils.AddParameter(cmd, "@id", id);
 
-                    var reader = cmd.ExecuteReader();
-                    Team team = null;
-
-                    if (reader.Read())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        team = new Team()
+                        var team = new List<Team>();
+                        while (reader.Read())
                         {
-                            Id = id,
-                            Name = DbUtils.GetString(reader, "Name"),
-                            CreatedByUserProfileId = DbUtils.GetInt(reader, "CreatedByUserProfileId"),
-                        };
+                            var existingTeam = team.FirstOrDefault(t => t.Id == id);
+                            if(existingTeam == null)
+                            {
+                                existingTeam = new Team()
+                                {
+                                    Id = id,
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    CreatedByUserProfileId = DbUtils.GetInt(reader, "CreatedByUserProfileId"),
+                                    Players = new List<Player>(),
+                                };
+                                team.Add(existingTeam);
+                            }
+                            if (DbUtils.IsNotDbNull(reader, "PlayerId"))
+                            {
+                                existingTeam.Players.Add(new Player()
+                                {
+                                    Id = DbUtils.GetInt(reader, "PlayerId"),
+                                    FirstName = DbUtils.GetString(reader, "FirstName"),
+                                    LastName = DbUtils.GetString(reader, "LastName"),
+                                    Position = DbUtils.GetString(reader, "Position"),
+                                    JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
+                                    TeamId = DbUtils.GetInt(reader, "TeamId"),
+                                    Line = DbUtils.GetInt(reader, "Line"),
 
+                                });
+                            }
+
+                        }
+                        return team;
                     }
-                    reader.Close();
-                    return team;
                 }
             }
         }

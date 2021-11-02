@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace LineMate.Models
@@ -11,6 +12,9 @@ namespace LineMate.Models
         public string Name { get; set; }
 
         public int CreatedByUserProfileId { get; set; }
+        public Player Player { get; set; }
+
+        public List<Player> Players { get; set; }
 
     }
 }
