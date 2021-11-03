@@ -13,9 +13,8 @@ export default function Hello() {
             }}
         >
             <h1>
-                Welcome to Tabloid
+                Welcome to LineMate
                 <br />
-                <i>The Facebook of Blogs</i>
             </h1>
         </span>
     )

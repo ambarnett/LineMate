@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Container, ListGroup, ListGroupItem } from "reactstrap";
+import { Button, Card, CardHeader, Container, ListGroup } from "reactstrap";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { getPlayerById, deletePlayer } from "../../modules/playerManager";
 
