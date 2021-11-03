@@ -22,11 +22,22 @@ namespace LineMate.Repositories
                                             p.LastName, 
                                             p.Position, 
                                             p.JerseyNumber, 
-                                            p.TeamId, 
+                                            ISNULL(p.TeamId, 0) AS TeamId, 
                                             p.Line, 
-                                            t.Name
+                                            ISNULL(t.Name, 'None') AS Name
                                         FROM Players p 
                                         LEFT JOIN Team t on p.TeamId = t.Id";
+                        //@"SELECT 
+                        //                    p.Id, 
+                        //                    p.FirstName, 
+                        //                    p.LastName, 
+                        //                    p.Position, 
+                        //                    p.JerseyNumber, 
+                        //                    p.TeamId, 
+                        //                    p.Line, 
+                        //                    t.Name
+                        //                FROM Players p 
+                        //                LEFT JOIN Team t on p.TeamId = t.Id";
 
                     var reader = cmd.ExecuteReader();
                     var players = new List<Player>();
@@ -34,7 +45,7 @@ namespace LineMate.Repositories
                     {
                         players.Add(new Player()
                         {
-                            Id = (int)DbUtils.GetNullableInt(reader, "Id"),
+                            Id = DbUtils.GetInt(reader, "Id"),
                             FirstName = DbUtils.GetString(reader, "FirstName"),
                             LastName = DbUtils.GetString(reader, "LastName"),
                             Position = DbUtils.GetString(reader, "Position"),
