@@ -28,7 +28,7 @@ export default function TeamList() {
 
     return (
         <Container>
-            <Button outline color="primary" onClick={e => {
+            <Button outline color="primary" className="mt-3" onClick={e => {
                 e.preventDefault()
                 history.push("/team/add")
             }}>Add Team</Button>

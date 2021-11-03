@@ -25,6 +25,7 @@ namespace LineMate
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<ITeamRepository, TeamRepository>();
             services.AddTransient<IPlayerRepository, PlayerRepository>();
+            services.AddTransient<ISpecialTeamsRepository, SpecialTeamsRepository>();
 
             var firebaseProjectId = Configuration.GetValue<string>("FirebaseProjectId");
             var googleTokenUrl = $"https://securetoken.google.com/{firebaseProjectId}";
