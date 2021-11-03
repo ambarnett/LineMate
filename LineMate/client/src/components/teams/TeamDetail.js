@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, ListGroup, ListGroupItem, ListGroupItemHeading, Table } from "reactstrap";
+import { Button, Container, ListGroup, ListGroupItem, ListGroupItemHeading, Table } from "reactstrap";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { getTeamById } from "../../modules/teamManager";
 
 export default function TeamDetail() {
-    const [team, setTeam] = useState({});
+    const [team, setTeam] = useState([]);
     const params = useParams();
     const history = useHistory();
 
@@ -12,19 +12,18 @@ export default function TeamDetail() {
         getTeamById(params.id).then(setTeam);
     }, []);
 
-    // const playersArr = team.players
-    // console.log(playersArr)
-
-    // const line1 = playersArr.filter(function (p){
-    //     return p.line === 1;
-    // })
+    const line1 = team.players?.filter(player => player.line === 1);
+    const line2 = team.players?.filter(player => player.line === 2);
+    const line3 = team.players?.filter(player => player.line === 3);
+    const line4 = team.players?.filter(player => player.line === 4);
+    
     return (
-        <div className='container'>
+        <Container className="mt-4">
             <Link className='btn btn-dark' to={'/team'}>Go Back</Link>
             <div className='row justify-content-center'>
                 <div className='col-sm-12 col-lg-6'>
                     <ListGroup>
-                        <h3>{team.name}</h3>
+                        <h3 className="text-decoration-underline">{team.name}</h3>
                         <ListGroup>
                             <ListGroupItemHeading>Roster:</ListGroupItemHeading>
                             <Table>
@@ -57,7 +56,7 @@ export default function TeamDetail() {
                             <Table>
                                 <ListGroupItemHeading>Line 1</ListGroupItemHeading>
                                 <Table>
-                                    {team.players?.map((player) => (
+                                    {line1.map((player) => (
                                         <tbody>
                                             <tr>
                                                 <th scope="row">
@@ -71,7 +70,7 @@ export default function TeamDetail() {
                                 </Table>
                                 <ListGroupItemHeading>Line 2</ListGroupItemHeading>
                                 <Table>
-                                    {team.players?.map((player) => (
+                                    {line2?.map((player) => (
                                         <tbody>
                                             <tr>
                                                 <th scope="row">
@@ -83,7 +82,7 @@ export default function TeamDetail() {
                                 </Table>
                                 <ListGroupItemHeading>Line 3</ListGroupItemHeading>
                                 <Table>
-                                    {team.players?.map((player) => (
+                                    {line3?.map((player) => (
                                         <tbody>
                                             <tr>
                                                 <th scope="row">
@@ -95,7 +94,7 @@ export default function TeamDetail() {
                                 </Table>
                                 <ListGroupItemHeading>Line 4</ListGroupItemHeading>
                                 <Table>
-                                    {team.players?.map((player) => (
+                                    {line4?.map((player) => (
                                         <tbody>
                                             <tr>
                                                 <th scope="row">
@@ -113,6 +112,6 @@ export default function TeamDetail() {
                     }}>Edit Team</Button>
                 </div>
             </div>
-        </div >
+        </Container>
     )
 }

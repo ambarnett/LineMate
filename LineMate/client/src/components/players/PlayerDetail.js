@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, CardHeader, Container, ListGroup } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, Row } from "reactstrap";
 import { useParams, useHistory, Link } from "react-router-dom";
 import { getPlayerById, deletePlayer } from "../../modules/playerManager";
 
@@ -19,16 +19,23 @@ export default function PlayerDetail() {
         }
     }
     return (
-        <Container>
-            <Link className="btn btn-dark" to={"/player"}>Player List</Link>
+        <Container className="mt-4">
+            <Link className="btn btn-dark mb-2" to={"/player"}>Back To Player List</Link>
             <ListGroup>
                 <Card>
                     <CardHeader>{player.firstName} {player.lastName}</CardHeader>
-                    <Button className="btn btn-warning" onClick={() => {
-                        history.push(`/player/edit/${player.id}`)
-                    }}>Edit player info</Button>
-                    <Button onClick={handleDelete}>Delete Player</Button>
+                    <CardBody>{player.position}</CardBody>
+                    <CardHeader></CardHeader>
+                    <CardBody>{player.team?.name}</CardBody>
                 </Card>
+                <Row>
+                    <Col className="text-end">
+                        <Button className="btn btn-warning" onClick={() => {
+                            history.push(`/player/edit/${player.id}`)
+                        }}>Edit player info</Button>
+                        <Button onClick={handleDelete}>Delete Player</Button>
+                    </Col>
+                </Row>
             </ListGroup>
         </Container>
     )
