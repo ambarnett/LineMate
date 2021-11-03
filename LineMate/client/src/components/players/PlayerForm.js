@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import { addPlayer, getPlayerById, updatePlayer } from "../../modules/playerManager";
+import { getAllTeams } from "../../modules/teamManager";
 
 export default function PlayerForm() {
     const history = useHistory();
     const [player, setPlayer] = useState({});
+    const [teams, setTeams] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const params = useParams();
     //need to also bring in teams to be able to select the team the player is on if they are currently on a team
@@ -18,6 +20,10 @@ export default function PlayerForm() {
                     setIsLoading(false)
                 })
         }
+    }, [])
+
+    useEffect(() => {
+        getAllTeams().then(setTeams)
     }, [])
 
     const handleInputChange = e => {
@@ -112,9 +118,12 @@ export default function PlayerForm() {
                 <Input 
                 id="teamId"
                 name="teamId"
-                type="number"
+                type="select"
                 value={player.teamId}
-                onChange={handleInputChange}/>
+                onChange={handleInputChange}>
+                    {console.log(teams)}
+                    {teams.map((t) => (<option key={t.id} value={t.id}>{t.name}</option>))}
+                </Input>
             </FormGroup>
             <FormGroup>
                 <Button onClick={submitForm}>

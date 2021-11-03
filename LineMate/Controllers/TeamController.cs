@@ -7,7 +7,7 @@ using LineMate.Repositories;
 
 namespace LineMate.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
 

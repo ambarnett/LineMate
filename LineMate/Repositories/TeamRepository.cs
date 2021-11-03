@@ -21,16 +21,8 @@ namespace LineMate.Repositories
                     cmd.CommandText = @"SELECT 
                                             t.Id, 
                                             t.Name, 
-                                            t.CreatedByUserProfileId,
-                                                p.FirstName, 
-                                                p.LastName, 
-                                                p.Position,
-                                                p.JerseyNumber,
-                                                p.Line, 
-                                                p.TeamId,
-                                                p.Id AS PlayerId
-                                            FROM Team t 
-                                            JOIN Players p on p.TeamId = t.Id";
+                                            t.CreatedByUserProfileId
+                                            FROM Team t ";
                     var reader = cmd.ExecuteReader();
                     var teams = new List<Team>();
                     while (reader.Read())
@@ -40,16 +32,6 @@ namespace LineMate.Repositories
                             Id = (int)DbUtils.GetNullableInt(reader, "Id"),
                             Name = DbUtils.GetString(reader, "Name"),
                             CreatedByUserProfileId = (int)DbUtils.GetNullableInt(reader, "CreatedByUserProfileId"),
-                            Player = new Player()
-                            {
-                                Id = DbUtils.GetInt(reader, "PlayerId"),
-                                FirstName = DbUtils.GetString(reader, "FirstName"),
-                                LastName = DbUtils.GetString(reader, "LastName"),
-                                Position = DbUtils.GetString(reader, "Position"),
-                                JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
-                                TeamId = DbUtils.GetInt(reader, "TeamId"),
-                                Line = DbUtils.GetInt(reader, "Line"),
-                            }
                         });
                     }
                     reader.Close();
@@ -59,7 +41,7 @@ namespace LineMate.Repositories
             }
         }
 
-        public List<Team> GetTeamById(int id)
+        public Team GetTeamById(int id)
         {
             using (var conn = Connection)
             {
@@ -70,38 +52,36 @@ namespace LineMate.Repositories
                                             t.Id, 
                                             t.Name, 
                                             t.CreatedByUserProfileId,
-                                                p.FirstName, 
-                                                p.LastName, 
-                                                p.Position,
-                                                p.JerseyNumber,
-                                                p.TeamId,
-                                                p.Line, 
-                                                p.Id AS PlayerId
+                                            p.FirstName, 
+                                            p.LastName, 
+                                            p.Position,
+                                            p.JerseyNumber,
+                                            p.TeamId,
+                                            p.Line, 
+                                            p.Id AS PlayerId
                                             FROM Team t 
-                                            JOIN Players p on t.Id = p.TeamId
+                                            LEFT JOIN Players p on t.Id = p.TeamId
                                             WHERE t.Id = @id";
                     DbUtils.AddParameter(cmd, "@id", id);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        var team = new List<Team>();
+                        Team team = null;
                         while (reader.Read())
                         {
-                            var existingTeam = team.FirstOrDefault(t => t.Id == id);
-                            if(existingTeam == null)
+                            if(team == null)
                             {
-                                existingTeam = new Team()
+                                team = new Team()
                                 {
                                     Id = id,
                                     Name = DbUtils.GetString(reader, "Name"),
                                     CreatedByUserProfileId = DbUtils.GetInt(reader, "CreatedByUserProfileId"),
                                     Players = new List<Player>(),
                                 };
-                                team.Add(existingTeam);
                             }
                             if (DbUtils.IsNotDbNull(reader, "PlayerId"))
                             {
-                                existingTeam.Players.Add(new Player()
+                                team.Players.Add(new Player()
                                 {
                                     Id = DbUtils.GetInt(reader, "PlayerId"),
                                     FirstName = DbUtils.GetString(reader, "FirstName"),
@@ -110,10 +90,8 @@ namespace LineMate.Repositories
                                     JerseyNumber = DbUtils.GetInt(reader, "JerseyNumber"),
                                     TeamId = DbUtils.GetInt(reader, "TeamId"),
                                     Line = DbUtils.GetInt(reader, "Line"),
-
                                 });
                             }
-
                         }
                         return team;
                     }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "reactstrap";
+import { Button, Container } from "reactstrap";
 import { useHistory } from "react-router-dom";
 import Team from "./Team";
 import { getAllTeams, deleteTeam } from "../../modules/teamManager";
@@ -27,7 +27,7 @@ export default function TeamList() {
     }, [])
 
     return (
-        <>
+        <Container>
             <Button outline color="primary" onClick={e => {
                 e.preventDefault()
                 history.push("/team/add")
@@ -35,6 +35,6 @@ export default function TeamList() {
             <section>
                 {teams.map(t => <Team key={t.id} team={t} handleDelete={handleDelete} />)}
             </section>
-        </>
+        </Container>
     );
 }

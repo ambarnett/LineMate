@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from "react";
-import { Button, Card, CardBody } from "reactstrap";
+import { Button, Table, Container } from "reactstrap";
 import { useHistory } from "react-router-dom";
 import Player from "./Player";
 import { getAllPlayers } from "../../modules/playerManager";
@@ -14,16 +14,27 @@ export default function PlayerList() {
     }, [])
 
     return (
-        <>
+        <Container>
+            <br/>
             <Button outline color="primary" onClick={e => {
                 e.preventDefault()
                 history.push("/player/add")
             }}>Add New Player</Button>
-            <section>
+            <br/>
+            <br/>
+            <Table bordered striped>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Last Name</th>
+                        <th>First Name</th>
+                        <th>Current Team</th>
+                    </tr>
+                </thead>
                 {players.map(p =>
                     <Player key={p.id} player={p} />
                 )}
-            </section>
-        </>
+            </Table>
+        </Container>
     )
 }
