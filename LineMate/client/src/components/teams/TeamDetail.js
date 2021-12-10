@@ -56,7 +56,7 @@ export default function TeamDetail() {
                             <Table>
                                 <ListGroupItemHeading>Line 1</ListGroupItemHeading>
                                 <Table>
-                                    {line1.map((player) => (
+                                    {line1?.map((player) => (
                                         <tbody>
                                             <tr>
                                                 <th scope="row">
